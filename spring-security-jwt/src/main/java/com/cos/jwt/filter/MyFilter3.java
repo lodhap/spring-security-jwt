@@ -28,14 +28,14 @@ public class MyFilter3 implements Filter{
         // 요청할 때마다 header에 Authorization에 value값으로 토큰을 가지고 오겠죠?
         // 그때 토큰이 넘어오면 이 토큰이 내가 만들 토큰이 맞는지만 검증만 하면 됨.(RSA, HS256)
 		if(req.getMethod().equals("POST")) {
-			System.out.println("POST 요청됨");
+			System.out.println("MyFilter3 : POST 요청됨");
 			String headerAuth = req.getHeader("Authorization");
-			System.out.println(headerAuth);
-			System.out.println("필터3");
+			//System.out.println(headerAuth);
 			
 			if(headerAuth.equals("cos")) {
 				chain.doFilter(req, res);
-			} else {
+			} 
+			else {
 				PrintWriter out = res.getWriter();
 				out.println("인증안됨");
 			}

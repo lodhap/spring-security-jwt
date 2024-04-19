@@ -13,8 +13,11 @@ public class UserDao {
 	SqlSessionTemplate session;
 	
 	public User findByUsername(String username) {
-		return null;
-//		return session.selectOne("findByUsername", username);
+//		return null;
+		return session.selectOne("findByUsername", username);
 	}
 	
+	public int save(User user) {
+		return session.insert("save", user);
+	}
 }

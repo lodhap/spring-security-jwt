@@ -10,6 +10,9 @@ import org.springframework.security.web.authentication.www.BasicAuthenticationFi
 import org.springframework.security.web.context.SecurityContextPersistenceFilter;
 import org.springframework.web.filter.CorsFilter;
 
+import com.cos.jwt.config.jwt.JwtAuthenticationFilter;
+import com.cos.jwt.config.jwt.JwtAuthorizationFilter;
+import com.cos.jwt.dao.UserDao;
 import com.cos.jwt.filter.MyFilter1;
 import com.cos.jwt.filter.MyFilter3;
 
@@ -19,15 +22,20 @@ import com.cos.jwt.filter.MyFilter3;
 public class SecurityConfig extends WebSecurityConfigurerAdapter{
  
 	private final CorsFilter corsFilter;
+    private final UserDao dao;
 	
-    public SecurityConfig(CorsFilter corsFilter) {
-        this.corsFilter = corsFilter;
-    }
-	
+	public SecurityConfig(CorsFilter corsFilter, UserDao dao) {
+		super();
+		this.corsFilter = corsFilter;
+		this.dao = dao;
+	}
+
+
+
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
 		
-		http.addFilterBefore(new MyFilter3(), SecurityContextPersistenceFilter.class);
+//		http.addFilterBefore(new MyFilter3(), SecurityContextPersistenceFilter.class);
 		
 		
 		http.csrf().disable();
@@ -38,12 +46,15 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
 		.formLogin().disable() // form태그 로그인 방식 사용 x
 		.httpBasic().disable() // 기본적인 http로그인 방식 x 
 		
+		.addFilter(new JwtAuthenticationFilter(authenticationManager()))
+		.addFilter(new JwtAuthorizationFilter(authenticationManager(), dao))
+		
 		.authorizeRequests()
-		.antMatchers("api/v1/user/**")
+		.antMatchers("/api/vl/user/**")
 		.access("hasRole('ROLE_USER') or hasRole('ROLE_MANAGER') or hasRole('ROLE_ADMIN')")
-		.antMatchers("api/v1/manager/**")
+		.antMatchers("/api/vl/manager/**")
 		.access("hasRole('ROLE_MANAGER') or hasRole('ROLE_ADMIN')")
-		.antMatchers("api/v1/manager/**")
+		.antMatchers("/api/vl/admin/**")
 		.access("hasRole('ROLE_ADMIN')")
 		
 		.anyRequest().permitAll();

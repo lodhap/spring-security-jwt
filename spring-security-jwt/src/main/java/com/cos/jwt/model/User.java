@@ -16,6 +16,7 @@ public class User {
 	
 	public List<String> getRoleList(){
 		if(this.roles.length()>0) {
+			System.out.println("roles  "+this.roles+"   :  "+this.roles.split(","));
 			return Arrays.asList(this.roles.split(","));
 		}else {
 			return new ArrayList<>();

@@ -6,6 +6,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	<select id="findByUsername" resultType="UserDTO" parameterType="String">
 	  select * from  users where username= #{username}
 	</select>
+	
+	<insert id="save" parameterType="UserDTO">
+		insert into users values (users_id_seq.NEXTVAL, #{username}, #{password}, #{roles})
+	</insert>
 </mapper>
 
 
